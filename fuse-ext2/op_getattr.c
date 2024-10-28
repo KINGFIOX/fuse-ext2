@@ -20,30 +20,29 @@
 
 #include "fuse-ext2.h"
 
-int op_getattr (const char *path, struct stat *stbuf)
-{
-	int rt;
-	ext2_ino_t ino;
-	struct ext2_inode inode;
-	ext2_filsys e2fs = current_ext2fs();
+int op_getattr(const char *path, struct stat *stbuf) {
+  int rt;
+  ext2_ino_t ino;
+  struct ext2_inode inode;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	debugf("path = %s", path);
+  debugf("enter");
+  debugf("path = %s", path);
 
-	rt = do_check(path);
-	if (rt != 0) {
-		debugf("do_check(%s); failed", path);
-		return rt;
-	}
+  rt = do_check(path);
+  if (rt != 0) {
+    debugf("do_check(%s); failed", path);
+    return rt;
+  }
 
-	rt = do_readinode(e2fs, path, &ino, &inode);
-	if (rt) {
-		debugf("do_readinode(%s, &ino, &vnode); failed", path);
-		return rt;
-	}
-	do_fillstatbuf(e2fs, ino, &inode, stbuf);
+  rt = do_readinode(e2fs, path, &ino, &inode);
+  if (rt) {
+    debugf("do_readinode(%s, &ino, &vnode); failed", path);
+    return rt;
+  }
+  do_fillstatbuf(e2fs, ino, &inode, stbuf);
 
-	debugf("path: %s, size: %d", path, stbuf->st_size);
-	debugf("leave");
-	return 0;
+  debugf("path: %s, size: %d", path, stbuf->st_size);
+  debugf("leave");
+  return 0;
 }

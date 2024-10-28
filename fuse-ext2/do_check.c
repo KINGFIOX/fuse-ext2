@@ -20,46 +20,40 @@
 
 #include "fuse-ext2.h"
 
-int do_check (const char *path)
-{
-	char *basename_path;
-	basename_path = strrchr(path, '/');
-	if (basename_path == NULL) {
-		debugf("this should not happen %s", path);
-		return -ENOENT;
-	}
-	basename_path++;
-	if (strlen(basename_path) > 255) {
-		debugf("basename exceeds 255 characters %s",path);
-		return -ENAMETOOLONG;
-	}
-	return 0;
+int do_check(const char *path) {
+  char *basename_path;
+  basename_path = strrchr(path, '/');
+  if (basename_path == NULL) {
+    debugf("this should not happen %s", path);
+    return -ENOENT;
+  }
+  basename_path++;
+  if (strlen(basename_path) > 255) {
+    debugf("basename exceeds 255 characters %s", path);
+    return -ENAMETOOLONG;
+  }
+  return 0;
 }
 
-int do_check_split (const char *path, char **dirname, char **basename)
-{
-	char *tmp;
-	char *cpath = strdup(path);
-	tmp = strrchr(cpath, '/');
-	if (tmp == NULL) {
-		debugf("this should not happen %s", path);
-		free(cpath);
-		return -ENOENT;
-	}
-	*tmp='\0';
-	tmp++;
-	if (strlen(tmp) > 255) {
-		debugf("basename exceeds 255 characters %s",path);
-		free(cpath);
-		return -ENAMETOOLONG;
-	}
-	*dirname = cpath;
-	*basename = tmp;
-	return 0;
+int do_check_split(const char *path, char **dirname, char **basename) {
+  char *tmp;
+  char *cpath = strdup(path);
+  tmp = strrchr(cpath, '/');
+  if (tmp == NULL) {
+    debugf("this should not happen %s", path);
+    free(cpath);
+    return -ENOENT;
+  }
+  *tmp = '\0';
+  tmp++;
+  if (strlen(tmp) > 255) {
+    debugf("basename exceeds 255 characters %s", path);
+    free(cpath);
+    return -ENAMETOOLONG;
+  }
+  *dirname = cpath;
+  *basename = tmp;
+  return 0;
 }
 
-void free_split (char *dirname, char *basename)
-{
-	free(dirname);
-}
-
+void free_split(char *dirname, char *basename) { free(dirname); }

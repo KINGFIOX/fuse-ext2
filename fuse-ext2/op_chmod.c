@@ -20,41 +20,40 @@
 
 #include "fuse-ext2.h"
 
-int op_chmod (const char *path, mode_t mode)
-{
-	int rt;
-	int mask;
-	time_t tm;
-	ext2_ino_t ino;
-	struct ext2_inode inode;
-	ext2_filsys e2fs = current_ext2fs();
+int op_chmod(const char *path, mode_t mode) {
+  int rt;
+  int mask;
+  time_t tm;
+  ext2_ino_t ino;
+  struct ext2_inode inode;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	debugf("path = %s 0%o", path, mode);
+  debugf("enter");
+  debugf("path = %s 0%o", path, mode);
 
-	rt = do_check(path);
-	if (rt != 0) {
-		debugf("do_check(%s); failed", path);
-		return rt;
-	}
+  rt = do_check(path);
+  if (rt != 0) {
+    debugf("do_check(%s); failed", path);
+    return rt;
+  }
 
-	rt = do_readinode(e2fs, path, &ino, &inode);
-	if (rt) {
-		debugf("do_readinode(%s, &ino, &vnode); failed", path);
-		return rt;
-	}
+  rt = do_readinode(e2fs, path, &ino, &inode);
+  if (rt) {
+    debugf("do_readinode(%s, &ino, &vnode); failed", path);
+    return rt;
+  }
 
-	tm = e2fs->now ? e2fs->now : time(NULL);
-	mask = S_IRWXU | S_IRWXG | S_IRWXO | S_ISUID | S_ISGID | S_ISVTX;
-	inode.i_mode = (inode.i_mode & ~mask) | (mode & mask);
-	inode.i_ctime = tm;
+  tm = e2fs->now ? e2fs->now : time(NULL);
+  mask = S_IRWXU | S_IRWXG | S_IRWXO | S_ISUID | S_ISGID | S_ISVTX;
+  inode.i_mode = (inode.i_mode & ~mask) | (mode & mask);
+  inode.i_ctime = tm;
 
-	rt = do_writeinode(e2fs, ino, &inode);
-	if (rt) {
-		debugf("do_writeinode(e2fs, ino, &inode); failed");
-		return -EIO;
-	}
+  rt = do_writeinode(e2fs, ino, &inode);
+  if (rt) {
+    debugf("do_writeinode(e2fs, ino, &inode); failed");
+    return -EIO;
+  }
 
-	debugf("leave");
-	return 0;
+  debugf("leave");
+  return 0;
 }

@@ -22,18 +22,17 @@
 
 #define VOLNAME_SIZE_MAX 16
 
-int do_probe (struct extfs_data *opts)
-{
-	errcode_t rc;
-	ext2_filsys e2fs;
+int do_probe(struct extfs_data *opts) {
+  errcode_t rc;
+  ext2_filsys e2fs;
 
-	debugf_main("enter");
+  debugf_main("enter");
 
-	rc = ext2fs_open(opts->device, EXT2_FLAG_RW, 0, 0, unix_io_manager, &e2fs);
-	if (rc) {
-		debugf_main("Error while trying to open %s (rc=%d)", opts->device, rc);
-		return -1;
-	}
+  rc = ext2fs_open(opts->device, EXT2_FLAG_RW, 0, 0, unix_io_manager, &e2fs);
+  if (rc) {
+    debugf_main("Error while trying to open %s (rc=%d)", opts->device, rc);
+    return -1;
+  }
 #if 0
 	rc = ext2fs_read_bitmaps(e2fs);
 	if (rc) {
@@ -42,16 +41,16 @@ int do_probe (struct extfs_data *opts)
 		return -2;
 	}
 #endif
-	if (e2fs->super != NULL) {
-		opts->volname = (char *) malloc(sizeof(char) * (VOLNAME_SIZE_MAX + 1));
-		if (opts->volname != NULL) {
-			memset(opts->volname, 0, sizeof(char) * (VOLNAME_SIZE_MAX + 1));
-			strncpy(opts->volname, e2fs->super->s_volume_name, VOLNAME_SIZE_MAX);
-			opts->volname[VOLNAME_SIZE_MAX] = '\0';
-		}
-	}
-	ext2fs_close(e2fs);
+  if (e2fs->super != NULL) {
+    opts->volname = (char *)malloc(sizeof(char) * (VOLNAME_SIZE_MAX + 1));
+    if (opts->volname != NULL) {
+      memset(opts->volname, 0, sizeof(char) * (VOLNAME_SIZE_MAX + 1));
+      strncpy(opts->volname, e2fs->super->s_volume_name, VOLNAME_SIZE_MAX);
+      opts->volname[VOLNAME_SIZE_MAX] = '\0';
+    }
+  }
+  ext2fs_close(e2fs);
 
-	debugf_main("leave");
-	return 0;
+  debugf_main("leave");
+  return 0;
 }

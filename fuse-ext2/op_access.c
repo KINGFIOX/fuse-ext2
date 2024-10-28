@@ -21,24 +21,23 @@
 #include "fuse-ext2.h"
 #include <unistd.h>
 
-int op_access (const char *path, int mask)
-{
-	int rt;
-	ext2_filsys e2fs = current_ext2fs();
+int op_access(const char *path, int mask) {
+  int rt;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	debugf("path = %s, mask = 0%o", path, mask);
-	
-	rt = do_check(path);
-	if (rt != 0) {
-		debugf("do_check(%s); failed", path);
-		return rt;
-	}
+  debugf("enter");
+  debugf("path = %s, mask = 0%o", path, mask);
 
-	if ((mask & W_OK) && !(e2fs->flags & EXT2_FLAG_RW)) {
-		return -EACCES;
-	}
-	
-	debugf("leave");
-	return 0;
+  rt = do_check(path);
+  if (rt != 0) {
+    debugf("do_check(%s); failed", path);
+    return rt;
+  }
+
+  if ((mask & W_OK) && !(e2fs->flags & EXT2_FLAG_RW)) {
+    return -EACCES;
+  }
+
+  debugf("leave");
+  return 0;
 }

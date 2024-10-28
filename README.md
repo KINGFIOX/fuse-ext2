@@ -1,6 +1,6 @@
 # Fuse Ext2
 
-**Fuse-ext2** is an EXT2/EXT3/EXT4 filesystem for  [**FUSE**](https://github.com/osxfuse/fuse), and is built to work with [**osxfuse**](https://github.com/osxfuse/osxfuse).
+**Fuse-ext2** is an EXT2/EXT3/EXT4 filesystem for [**FUSE**](https://github.com/osxfuse/fuse), and is built to work with [**osxfuse**](https://github.com/osxfuse/osxfuse).
 
 ## Dependencies
 
@@ -36,36 +36,37 @@ brew install --cask macfuse
 
 Building from source depends on the following:
 
-* m4
-* autoconf
-* automake
-* libtool
-* libfuse-dev
-* e2fsprogs
-* comerr-dev
-* e2fslibs-dev
+- m4
+- autoconf
+- automake
+- libtool
+- libfuse-dev
+- e2fsprogs
+- comerr-dev
+- e2fslibs-dev
 
 ```shell
 $ sudo apt-get install m4 autoconf automake libtool
 $ sudo apt-get install libfuse-dev e2fsprogs comerr-dev e2fslibs-dev
-	
+
 $ ./autogen.sh
 $ ./configure
 $ make
 $ sudo make install
 ```
 
-### Fedora 
-```bash 
+### Fedora
+
+```bash
 $ sudo dnf install @development-tools m4 autoconf automake libtool e2fsprogs libcom_err-devel fuse-libs e2fsprogs-devel fuse-devel
-# build part 
+# build part
 $ ./autogen.sh
 $ ./configure
 $ make
 $ sudo make install
 ```
 
-You can use `checkinstall` or some other equivalent tool to generate an install 
+You can use `checkinstall` or some other equivalent tool to generate an install
 package for your distribution.
 
 ### FreeBSD:
@@ -91,14 +92,14 @@ Dependencies:
 
 Building **from source** depends on the following:
 
-* m4
-* autoconf
-* automake
-* libtool
-* e2fsprogs
-* xcode-select
+- m4
+- autoconf
+- automake
+- libtool
+- e2fsprogs
+- xcode-select
 
-Copy and paste this into a file such as `/tmp/ext4/script.sh`, but do *not* name the file `install.sh`. Remember to `chmod +x script.sh`. Run it 
+Copy and paste this into a file such as `/tmp/ext4/script.sh`, but do _not_ name the file `install.sh`. Remember to `chmod +x script.sh`. Run it
 from that directory - `./script.sh`
 
 ```shell
@@ -110,47 +111,47 @@ mkdir fuse-ext2.build
 cd fuse-ext2.build
 
 if [ ! -d fuse-ext2 ]; then
-    git clone https://github.com/alperakcan/fuse-ext2.git	
+    git clone https://github.com/alperakcan/fuse-ext2.git
 fi
 
 # m4
 if [ ! -f m4-1.4.17.tar.gz ]; then
     curl -O -L http://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz
 fi
-tar -zxvf m4-1.4.17.tar.gz 
+tar -zxvf m4-1.4.17.tar.gz
 cd m4-1.4.17
 ./configure --prefix=/opt/gnu
 make -j 16
 sudo make install
 cd ../
-    
+
 # autoconf
 if [ ! -f autoconf-2.69.tar.gz ]; then
     curl -O -L http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
 fi
-tar -zxvf autoconf-2.69.tar.gz 
+tar -zxvf autoconf-2.69.tar.gz
 cd autoconf-2.69
 ./configure --prefix=/opt/gnu
 make
 sudo make install
 cd ../
-    
+
 # automake
 if [ ! -f automake-1.15.tar.gz ]; then
     curl -O -L http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz
 fi
-tar -zxvf automake-1.15.tar.gz 
+tar -zxvf automake-1.15.tar.gz
 cd automake-1.15
 ./configure --prefix=/opt/gnu
 make
 sudo make install
 cd ../
-    
+
 # libtool
 if [ ! -f libtool-2.4.6.tar.gz ]; then
     curl -O -L http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz
 fi
-tar -zxvf libtool-2.4.6.tar.gz 
+tar -zxvf libtool-2.4.6.tar.gz
 cd libtool-2.4.6
 ./configure --prefix=/opt/gnu
 make
@@ -169,7 +170,7 @@ sudo make install
 sudo make install-libs
 sudo cp /opt/gnu/lib/pkgconfig/* /usr/local/lib/pkgconfig
 cd ../
-    
+
 # fuse-ext2
 export PATH=/opt/gnu/bin:$PATH
 export PKG_CONFIG_PATH=/opt/gnu/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -187,7 +188,7 @@ The e2fsprogs live in /opt/gnu/bin and /opt/gnu/sbin. fuse-ext2 is in /usr/local
 
 ```shell
 cd
-dd if=/dev/zero of=/tmp/test-fs.ext4 bs=1024 count=102400  
+dd if=/dev/zero of=/tmp/test-fs.ext4 bs=1024 count=102400
 /opt/gnu/sbin/mkfs.ext4 /tmp/test-fs.ext4
 mkdir -p ~/mnt/fuse-ext2.test-fs.ext4
 fuse-ext2 /tmp/test-fs.ext4 ~/mnt/fuse-ext2.test-fs.ext4 -o rw+,allow_other,uid=501,gid=20
@@ -207,7 +208,7 @@ mount
 
 # Usage
 
-See the [Man page](http://man.cx/fuseext2(1)) for options.
+See the [Man page](<http://man.cx/fuseext2(1)>) for options.
 
 ```
 Usage:    fuse-ext2 <device|image_file> <mount_point> [-o option[,...]]
@@ -220,9 +221,9 @@ Example:  fuse-ext2 /dev/sda1 /mnt/sda1
 
 # Bugs
 
-* Multithread support is broken for now, so fuse operates in a single thread.
-* There are no known bugs for read-only mode, read only mode should be ok for everyone.
-* Even though write support is available, _please do not mount your filesystems with write support unless you have nothing to lose._
+- Multithread support is broken for now, so fuse operates in a single thread.
+- There are no known bugs for read-only mode, read only mode should be ok for everyone.
+- Even though write support is available, _please do not mount your filesystems with write support unless you have nothing to lose._
 
 Please send the output of the command below when reporting bugs as a [GitHub Issue](https://github.com/alperakcan/fuse-ext2/issues/new).
 Before submitting a bug report, please look at the [existing issues](https://github.com/alperakcan/fuse-ext2/issues?utf8=%E2%9C%93&q=is%3Aissue) first.

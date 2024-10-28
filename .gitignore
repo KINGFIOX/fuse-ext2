@@ -4,8 +4,9 @@ fs.ext2
 
 # IDE: PhpStorm
 .idea
-# VSCODE 
+# VSCODE
 .vscode
+.cache
 
 # Ignore the below build artifacts from running...
 # `autogen.sh`

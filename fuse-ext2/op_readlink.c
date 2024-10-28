@@ -20,57 +20,56 @@
 
 #include "fuse-ext2.h"
 
-int op_readlink (const char *path, char *buf, size_t size)
-{
-	int rt;
-	size_t s;
-	errcode_t rc;
-	ext2_ino_t ino;
-	char *b = NULL;
-	char *pathname;
-	struct ext2_inode inode;
-	ext2_filsys e2fs = current_ext2fs();
-	
-	debugf("enter");
-	debugf("path = %s", path);
+int op_readlink(const char *path, char *buf, size_t size) {
+  int rt;
+  size_t s;
+  errcode_t rc;
+  ext2_ino_t ino;
+  char *b = NULL;
+  char *pathname;
+  struct ext2_inode inode;
+  ext2_filsys e2fs = current_ext2fs();
 
-	rt = do_readinode(e2fs, path, &ino, &inode);
-	if (rt) {
-		debugf("do_readinode(%s, &ino, &inode); failed", path);
-		return rt;
-	}
-	
-	if (!LINUX_S_ISLNK(inode.i_mode)) {
-		debugf("%s is not a link", path);
-		return -EINVAL;
-	}
-	
-	if (ext2fs_inode_data_blocks(e2fs, &inode)) {
-		rc = ext2fs_get_mem(EXT2_BLOCK_SIZE(e2fs->super), &b);
-		if (rc) {
-			debugf("ext2fs_get_mem(EXT2_BLOCK_SIZE(e2fs->super), &b); failed");
-			return -ENOMEM;
-		}
-		rc = io_channel_read_blk(e2fs->io, inode.i_block[0], 1, b);
-		if (rc) {
-			ext2fs_free_mem(&b);
-			debugf("io_channel_read_blk(e2fs->io, inode.i_block[0], 1, b); failed");
-			return -EIO;
-		}
-		pathname = b;
-	} else {
-		pathname = (char *) &(inode.i_block[0]);
-	}
-	
-	debugf("pathname: %s", pathname);
-	
-	s = (size < strlen(pathname) + 1) ? size : strlen(pathname) + 1;
-	snprintf(buf, s, "%s", pathname);
-	
-	if (b) {
-		ext2fs_free_mem(&b);
-	}
+  debugf("enter");
+  debugf("path = %s", path);
 
-	debugf("leave");
-	return 0;
+  rt = do_readinode(e2fs, path, &ino, &inode);
+  if (rt) {
+    debugf("do_readinode(%s, &ino, &inode); failed", path);
+    return rt;
+  }
+
+  if (!LINUX_S_ISLNK(inode.i_mode)) {
+    debugf("%s is not a link", path);
+    return -EINVAL;
+  }
+
+  if (ext2fs_inode_data_blocks(e2fs, &inode)) {
+    rc = ext2fs_get_mem(EXT2_BLOCK_SIZE(e2fs->super), &b);
+    if (rc) {
+      debugf("ext2fs_get_mem(EXT2_BLOCK_SIZE(e2fs->super), &b); failed");
+      return -ENOMEM;
+    }
+    rc = io_channel_read_blk(e2fs->io, inode.i_block[0], 1, b);
+    if (rc) {
+      ext2fs_free_mem(&b);
+      debugf("io_channel_read_blk(e2fs->io, inode.i_block[0], 1, b); failed");
+      return -EIO;
+    }
+    pathname = b;
+  } else {
+    pathname = (char *)&(inode.i_block[0]);
+  }
+
+  debugf("pathname: %s", pathname);
+
+  s = (size < strlen(pathname) + 1) ? size : strlen(pathname) + 1;
+  snprintf(buf, s, "%s", pathname);
+
+  if (b) {
+    ext2fs_free_mem(&b);
+  }
+
+  debugf("leave");
+  return 0;
 }

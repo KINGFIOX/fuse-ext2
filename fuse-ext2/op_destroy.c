@@ -20,16 +20,15 @@
 
 #include "fuse-ext2.h"
 
-void op_destroy (void *userdata)
-{
-	errcode_t rc;
-	ext2_filsys e2fs = current_ext2fs();
+void op_destroy(void *userdata) {
+  errcode_t rc;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	rc = ext2fs_close(e2fs);
-	if (rc) {
-		debugf("Error while trying to close ext2 filesystem");
-	}
-	e2fs = NULL;
-	debugf("leave");
+  debugf("enter");
+  rc = ext2fs_close(e2fs);
+  if (rc) {
+    debugf("Error while trying to close ext2 filesystem");
+  }
+  e2fs = NULL;
+  debugf("leave");
 }

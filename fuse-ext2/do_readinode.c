@@ -20,18 +20,17 @@
 
 #include "fuse-ext2.h"
 
-int do_readinode (ext2_filsys e2fs, const char *path, ext2_ino_t *ino, struct ext2_inode *inode)
-{
-	errcode_t rc;
-	rc = ext2fs_namei(e2fs, EXT2_ROOT_INO, EXT2_ROOT_INO, path, ino);
-	if (rc) {
-		debugf("ext2fs_namei(e2fs, EXT2_ROOT_INO, EXT2_ROOT_INO, %s, ino); failed", path);
-		return -ENOENT;
-	}
-	rc = ext2fs_read_inode(e2fs, *ino, inode);
-	if (rc) {
-		debugf("ext2fs_read_inode(e2fs, *ino, inode); failed");
-		return -EIO;
-	}
-	return 0;
+int do_readinode(ext2_filsys e2fs, const char *path, ext2_ino_t *ino, struct ext2_inode *inode) {
+  errcode_t rc;
+  rc = ext2fs_namei(e2fs, EXT2_ROOT_INO, EXT2_ROOT_INO, path, ino);
+  if (rc) {
+    debugf("ext2fs_namei(e2fs, EXT2_ROOT_INO, EXT2_ROOT_INO, %s, ino); failed", path);
+    return -ENOENT;
+  }
+  rc = ext2fs_read_inode(e2fs, *ino, inode);
+  if (rc) {
+    debugf("ext2fs_read_inode(e2fs, *ino, inode); failed");
+    return -EIO;
+  }
+  return 0;
 }

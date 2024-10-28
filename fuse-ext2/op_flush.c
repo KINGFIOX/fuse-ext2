@@ -20,23 +20,22 @@
 
 #include "fuse-ext2.h"
 
-int op_flush (const char *path, struct fuse_file_info *fi)
-{
-	errcode_t rc;
-	ext2_file_t efile = EXT2FS_FILE(fi->fh);
+int op_flush(const char *path, struct fuse_file_info *fi) {
+  errcode_t rc;
+  ext2_file_t efile = EXT2FS_FILE(fi->fh);
 
-	debugf("enter");
-	debugf("path = %s (%p)", path, efile);
-	
-	if (efile == NULL) {
-		return -ENOENT;
-	}
-	
-	rc = ext2fs_file_flush(efile);
-	if (rc) {
-		return -EIO;
-	}
-	
-	debugf("leave");
-	return 0;
+  debugf("enter");
+  debugf("path = %s (%p)", path, efile);
+
+  if (efile == NULL) {
+    return -ENOENT;
+  }
+
+  rc = ext2fs_file_flush(efile);
+  if (rc) {
+    return -EIO;
+  }
+
+  debugf("leave");
+  return 0;
 }

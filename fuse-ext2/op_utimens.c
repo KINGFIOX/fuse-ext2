@@ -20,39 +20,36 @@
 
 #include "fuse-ext2.h"
 
-int op_utimens (const char *path, const struct timespec tv[2])
-{
-	int rt;
-	ext2_ino_t ino;
-	struct ext2_inode inode;
-	ext2_filsys e2fs = current_ext2fs();
+int op_utimens(const char *path, const struct timespec tv[2]) {
+  int rt;
+  ext2_ino_t ino;
+  struct ext2_inode inode;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	debugf("path = %s", path);
-	
-	rt = do_check(path);
-	if (rt != 0) {
-		debugf("do_check(%s); failed", path);
-		return rt;
-	}
+  debugf("enter");
+  debugf("path = %s", path);
 
-	rt = do_readinode(e2fs, path, &ino, &inode);
-	if (rt) {
-		debugf("do_readinode(%s, &ino, &vnode); failed", path);
-		return rt;
-	}
-	
-	if (tv[0].tv_nsec != UTIME_OMIT)
-		inode.i_atime = tv[0].tv_sec;
-	if (tv[1].tv_nsec != UTIME_OMIT)
-		inode.i_mtime = tv[1].tv_sec;
+  rt = do_check(path);
+  if (rt != 0) {
+    debugf("do_check(%s); failed", path);
+    return rt;
+  }
 
-	rt = do_writeinode(e2fs, ino, &inode);
-	if (rt) {
-		debugf("do_writeinode(e2fs, ino, &inode); failed");
-		return -EIO;
-	}
+  rt = do_readinode(e2fs, path, &ino, &inode);
+  if (rt) {
+    debugf("do_readinode(%s, &ino, &vnode); failed", path);
+    return rt;
+  }
 
-	debugf("leave");
-	return 0;
+  if (tv[0].tv_nsec != UTIME_OMIT) inode.i_atime = tv[0].tv_sec;
+  if (tv[1].tv_nsec != UTIME_OMIT) inode.i_mtime = tv[1].tv_sec;
+
+  rt = do_writeinode(e2fs, ino, &inode);
+  if (rt) {
+    debugf("do_writeinode(e2fs, ino, &inode); failed");
+    return -EIO;
+  }
+
+  debugf("leave");
+  return 0;
 }

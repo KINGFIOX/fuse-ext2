@@ -20,38 +20,36 @@
 
 #include "fuse-ext2.h"
 
-int do_release (ext2_file_t efile)
-{
-	errcode_t rc;
+int do_release(ext2_file_t efile) {
+  errcode_t rc;
 
-	debugf("enter");
-	debugf("path = (%p)", efile);
+  debugf("enter");
+  debugf("path = (%p)", efile);
 
-	if (efile == NULL) {
-		return -ENOENT;
-	}
-	rc = ext2fs_file_close(efile);
-	if (rc) {
-		return -EIO;
-	}
+  if (efile == NULL) {
+    return -ENOENT;
+  }
+  rc = ext2fs_file_close(efile);
+  if (rc) {
+    return -EIO;
+  }
 
-	debugf("leave");
-	return 0;
+  debugf("leave");
+  return 0;
 }
 
-int op_release (const char *path, struct fuse_file_info *fi)
-{
-	int rt;
-	ext2_file_t efile = (ext2_file_t) (unsigned long) fi->fh;
+int op_release(const char *path, struct fuse_file_info *fi) {
+  int rt;
+  ext2_file_t efile = (ext2_file_t)(unsigned long)fi->fh;
 
-	debugf("enter");
-	debugf("path = %s (%p)", path, efile);
-	rt = do_release(efile);
-	if (rt != 0) {
-		debugf("do_release() failed");
-		return rt;
-	}
+  debugf("enter");
+  debugf("path = %s (%p)", path, efile);
+  rt = do_release(efile);
+  if (rt != 0) {
+    debugf("do_release() failed");
+    return rt;
+  }
 
-	debugf("leave");
-	return 0;
+  debugf("leave");
+  return 0;
 }

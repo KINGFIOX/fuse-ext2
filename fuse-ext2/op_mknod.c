@@ -20,16 +20,15 @@
 
 #include "fuse-ext2.h"
 
-int op_mknod (const char *path, mode_t mode, dev_t dev)
-{
-	int rt;
-	ext2_filsys e2fs = current_ext2fs();
+int op_mknod(const char *path, mode_t mode, dev_t dev) {
+  int rt;
+  ext2_filsys e2fs = current_ext2fs();
 
-	debugf("enter");
-	debugf("path = %s 0%o", path, mode);
+  debugf("enter");
+  debugf("path = %s 0%o", path, mode);
 
-	rt = do_create(e2fs, path, mode, dev, NULL);
+  rt = do_create(e2fs, path, mode, dev, NULL);
 
-	debugf("leave");
-	return rt;
+  debugf("leave");
+  return rt;
 }
